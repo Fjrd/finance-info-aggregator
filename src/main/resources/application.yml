@@ -3,7 +3,23 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://root:example@localhost:27017/admin
+      uri: ${fia-db-host:mongodb://root:example@localhost:27017/admin}
+  task:
+    scheduling:
+      time:
+        test: "0/10 * * * * *"
+  kafka:
+    producer:
+      bootstrap-servers: ${fia-kafka-host:localhost:9093}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    topics:
+      coin-price: fia-coin-price
 springdoc:
   swagger-ui:
     path: swagger-ui.html
+client:
+  coingecko:
+    host: "https://api.coingecko.com/api/v3"
+    coin-ids: "bitcoin,tether,ethereum,heco-peg-bnb,usd-coin,binance-peg-xrp,cardano,matic-network,binance-peg-dogecoin,binance-peg-litecoin"
+

@@ -22,6 +22,7 @@ repositories {
 }
 
 extra["testcontainersVersion"] = "1.17.6"
+extra["springCloudVersion"] = "2022.0.1"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -34,7 +35,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.kafka:spring-kafka")
-
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
@@ -47,6 +48,7 @@ dependencies {
 
 dependencyManagement {
     imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
         mavenBom("org.testcontainers:testcontainers-bom:${property("testcontainersVersion")}")
     }
 }

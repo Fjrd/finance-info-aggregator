@@ -22,3 +22,48 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: fia-zookeeper
+    expose:
+      - 2181
+    volumes:
+      - fia-zookeeper-data:/data
+      - fia-zookeeper-datalog:/datalog
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: fia-kafka
+    ports:
+      - 9093:9093
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://:9092,OUTSIDE://localhost:9093
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+      KAFKA_LISTENERS: INSIDE://:9092,OUTSIDE://:9093
+      KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    restart: unless-stopped
+    volumes:
+      - fia-kafka:/kafka
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    container_name: fia-kafdrop
+    restart: unless-stopped
+    ports:
+      - 9000:9000
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9092
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    depends_on:
+      - kafka
+
+volumes:
+  fia-kafka:
+  fia-zookeeper-data:
+  fia-zookeeper-datalog:
