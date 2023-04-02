@@ -36,6 +36,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
 
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")

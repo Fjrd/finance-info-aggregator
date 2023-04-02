@@ -18,10 +18,9 @@ class CoinLoaderImpl (
     @Value("\${spring.kafka.topics.coin-price}")
     lateinit var coinPriceTopicName: String
 
-    @Scheduled(cron = "\${spring.task.scheduling.time.test}", zone = "Europe/Moscow")
-    fun test() {
-        var eventMessage = coingeckoClient.simplePrice(coinIdsCommaSeparated, "usd")
+    @Scheduled(cron = "\${spring.task.scheduling.time.coingecko-fetch}", zone = "Europe/Moscow")
+    fun fetchFreshData() {
+        val eventMessage = coingeckoClient.simplePrice(coinIdsCommaSeparated, "usd")
         kafkaTemplate.send(coinPriceTopicName, eventMessage)
-        println("test")
     }
 }

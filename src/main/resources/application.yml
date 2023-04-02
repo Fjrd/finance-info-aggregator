@@ -7,12 +7,24 @@ spring:
   task:
     scheduling:
       time:
-        test: "0/10 * * * * *"
+        coingecko-fetch: "0/10 * * * * *"
+        calc-day-avg: "0 0/1 * * * *"
   kafka:
     producer:
       bootstrap-servers: ${fia-kafka-host:localhost:9093}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      bootstrap-servers: ${fia-kafka-host:localhost:9093}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+      group-id: test
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      max-poll-records: 5
+      fetch-max-wait: 60
     topics:
       coin-price: fia-coin-price
 springdoc:
